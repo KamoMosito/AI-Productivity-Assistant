@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ActivityRouteImport } from './routes/activity'
+import { Route as AssistantRouteImport } from './routes/assistant'
+import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as MeetingNotesRouteImport } from './routes/meeting-notes'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SmartEmailRouteImport } from './routes/smart-email'
+import { Route as TaskPlannerRouteImport } from './routes/task-planner'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ActivityRoute = ActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InsightsRoute = InsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingNotesRoute = MeetingNotesRouteImport.update({
+  id: '/meeting-notes',
+  path: '/meeting-notes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SmartEmailRoute = SmartEmailRouteImport.update({
+  id: '/smart-email',
+  path: '/smart-email',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TaskPlannerRoute = TaskPlannerRouteImport.update({
+  id: '/task-planner',
+  path: '/task-planner',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/activity': typeof ActivityRoute
+  '/assistant': typeof AssistantRoute
+  '/insights': typeof InsightsRoute
+  '/meeting-notes': typeof MeetingNotesRoute
+  '/settings': typeof SettingsRoute
+  '/smart-email': typeof SmartEmailRoute
+  '/task-planner': typeof TaskPlannerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/activity': typeof ActivityRoute
+  '/assistant': typeof AssistantRoute
+  '/insights': typeof InsightsRoute
+  '/meeting-notes': typeof MeetingNotesRoute
+  '/settings': typeof SettingsRoute
+  '/smart-email': typeof SmartEmailRoute
+  '/task-planner': typeof TaskPlannerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/activity': typeof ActivityRoute
+  '/assistant': typeof AssistantRoute
+  '/insights': typeof InsightsRoute
+  '/meeting-notes': typeof MeetingNotesRoute
+  '/settings': typeof SettingsRoute
+  '/smart-email': typeof SmartEmailRoute
+  '/task-planner': typeof TaskPlannerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/activity'
+    | '/assistant'
+    | '/insights'
+    | '/meeting-notes'
+    | '/settings'
+    | '/smart-email'
+    | '/task-planner'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/activity'
+    | '/assistant'
+    | '/insights'
+    | '/meeting-notes'
+    | '/settings'
+    | '/smart-email'
+    | '/task-planner'
+  id:
+    | '__root__'
+    | '/'
+    | '/activity'
+    | '/assistant'
+    | '/insights'
+    | '/meeting-notes'
+    | '/settings'
+    | '/smart-email'
+    | '/task-planner'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ActivityRoute: typeof ActivityRoute
+  AssistantRoute: typeof AssistantRoute
+  InsightsRoute: typeof InsightsRoute
+  MeetingNotesRoute: typeof MeetingNotesRoute
+  SettingsRoute: typeof SettingsRoute
+  SmartEmailRoute: typeof SmartEmailRoute
+  TaskPlannerRoute: typeof TaskPlannerRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +143,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/activity': {
+      id: '/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof ActivityRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/insights': {
+      id: '/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof InsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meeting-notes': {
+      id: '/meeting-notes'
+      path: '/meeting-notes'
+      fullPath: '/meeting-notes'
+      preLoaderRoute: typeof MeetingNotesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/smart-email': {
+      id: '/smart-email'
+      path: '/smart-email'
+      fullPath: '/smart-email'
+      preLoaderRoute: typeof SmartEmailRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/task-planner': {
+      id: '/task-planner'
+      path: '/task-planner'
+      fullPath: '/task-planner'
+      preLoaderRoute: typeof TaskPlannerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ActivityRoute: ActivityRoute,
+  AssistantRoute: AssistantRoute,
+  InsightsRoute: InsightsRoute,
+  MeetingNotesRoute: MeetingNotesRoute,
+  SettingsRoute: SettingsRoute,
+  SmartEmailRoute: SmartEmailRoute,
+  TaskPlannerRoute: TaskPlannerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
