@@ -94,7 +94,7 @@ function Dashboard() {
   return (
     <AppLayout>
       <section className="surface-card mb-8 bg-gradient-to-br from-pink-soft via-card to-lavender-soft p-6 sm:p-8">
-        <h1 className="text-2xl font-semibold sm:text-3xl">Good morning 👋</h1>
+        <h1 className="text-2xl font-semibold sm:text-3xl">Hello, Rootie 👋</h1>
         <p className="mt-2 text-sm text-muted-foreground sm:text-base">
           Let's grow the business, one task at a time.
         </p>
