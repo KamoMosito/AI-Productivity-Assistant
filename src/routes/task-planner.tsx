@@ -17,6 +17,7 @@ import {
 import { useAi } from "@/lib/useAi";
 import { buildPlannerPrompt, type PlannerTask } from "@/lib/prompts";
 import { toast } from "sonner";
+import { addActivity } from "@/lib/activity";
 
 export const Route = createFileRoute("/task-planner")({
   head: () => ({
@@ -69,14 +70,29 @@ function TaskPlanner() {
       toast.error("Add at least one task.");
       return;
     }
-    void ai.generate([
-      {
-        role: "system",
-        content:
-          "You are a productivity planner. You never change user-provided deadlines and never add tasks.",
-      },
-      { role: "user", content: buildPlannerPrompt(filled, mode) },
-    ]);
+    void ai
+      .generate([
+        {
+          role: "system",
+          content:
+            "You are a productivity planner. You never change user-provided deadlines and never add tasks.",
+        },
+        { role: "user", content: buildPlannerPrompt(filled, mode) },
+      ])
+      .then((text) => {
+        if (!text) return;
+        addActivity({
+          type: "Task Planner",
+          title: `${mode} plan (${filled.length} task${filled.length === 1 ? "" : "s"})`,
+          input: filled
+            .map(
+              (t) =>
+                `• ${t.task}${t.deadline ? ` — deadline: ${t.deadline}` : ""}${t.importance ? ` — importance: ${t.importance}` : ""}${t.duration ? ` — duration: ${t.duration}` : ""}${t.notes ? ` — notes: ${t.notes}` : ""}`,
+            )
+            .join("\n"),
+          output: text,
+        });
+      });
   };
 
   return (

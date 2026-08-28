@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useAi } from "@/lib/useAi";
 import { buildMeetingPrompt } from "@/lib/prompts";
 import { toast } from "sonner";
+import { addActivity } from "@/lib/activity";
 
 export const Route = createFileRoute("/meeting-notes")({
   head: () => ({
@@ -37,14 +38,24 @@ function MeetingNotes() {
       toast.error("Please paste a bit more of your meeting notes.");
       return;
     }
-    void ai.generate([
-      {
-        role: "system",
-        content:
-          "You extract structured information from meeting notes. You never invent details and write 'Not specified.' when information is absent.",
-      },
-      { role: "user", content: buildMeetingPrompt(notes) },
-    ]);
+    void ai
+      .generate([
+        {
+          role: "system",
+          content:
+            "You extract structured information from meeting notes. You never invent details and write 'Not specified.' when information is absent.",
+        },
+        { role: "user", content: buildMeetingPrompt(notes) },
+      ])
+      .then((text) => {
+        if (!text) return;
+        addActivity({
+          type: "Meeting Notes",
+          title: `Meeting summary — ${notes.trim().slice(0, 60)}${notes.trim().length > 60 ? "…" : ""}`,
+          input: notes,
+          output: text,
+        });
+      });
   };
 
   return (

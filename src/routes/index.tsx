@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Mail, NotebookPen, CalendarCheck, Search, Bot, TrendingUp } from "lucide-react";
+import { Mail, NotebookPen, CalendarCheck, Search, Bot } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
+import { countByType, formatWhen, useActivities } from "@/lib/activity";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -77,20 +79,15 @@ const FEATURES = [
 ];
 
 const STATS = [
-  { label: "Emails generated", value: 24, tint: "bg-pink-soft" },
-  { label: "Meetings summarized", value: 9, tint: "bg-lavender-soft" },
-  { label: "Tasks planned", value: 37, tint: "bg-sage-soft" },
-];
-
-const ACTIVITY = [
-  { what: "Email drafted for packaging supplier follow-up", when: "Today, 08:40" },
-  { what: "Team stand-up notes summarized", when: "Yesterday, 16:10" },
-  { what: "Weekly plan created (7 tasks)", when: "Yesterday, 09:05" },
-  { what: "Research: winter scalp care content ideas", when: "Mon, 14:22" },
-  { what: "Assistant chat: prioritising customer replies", when: "Mon, 11:47" },
+  { label: "Emails generated", type: "Smart Email" as const, tint: "bg-pink-soft" },
+  { label: "Meetings summarized", type: "Meeting Notes" as const, tint: "bg-lavender-soft" },
+  { label: "Tasks planned", type: "Task Planner" as const, tint: "bg-sage-soft" },
 ];
 
 function Dashboard() {
+  const { activities, ready } = useActivities();
+  const recent = activities.slice(0, 5);
+
   return (
     <AppLayout>
       <section className="surface-card mb-8 bg-gradient-to-br from-pink-soft via-card to-lavender-soft p-6 sm:p-8">
@@ -130,26 +127,35 @@ function Dashboard() {
         {STATS.map((s) => (
           <div key={s.label} className={`surface-card p-5 ${s.tint}`}>
             <p className="text-sm text-muted-foreground">{s.label}</p>
-            <p className="mt-2 text-3xl font-semibold">{s.value}</p>
-            <p className="mt-2 inline-flex items-center gap-1 text-xs text-muted-foreground">
-              <TrendingUp className="size-3.5" aria-hidden /> Demo data
+            <p className="mt-2 text-3xl font-semibold">
+              {ready ? countByType(activities, s.type) : 0}
             </p>
           </div>
         ))}
       </div>
 
       <h2 className="mb-4 mt-10 text-lg font-semibold">Recent activity</h2>
-      <ul className="surface-card divide-y divide-border">
-        {ACTIVITY.map((a) => (
-          <li key={a.what} className="flex flex-wrap items-center justify-between gap-2 px-5 py-4">
-            <span className="text-sm">{a.what}</span>
-            <span className="text-xs text-muted-foreground">{a.when}</span>
-          </li>
-        ))}
-      </ul>
-      <p className="mt-3 text-xs text-muted-foreground">
-        Recent activity shown here is fictional demo data for this internal prototype.
-      </p>
+      {recent.length === 0 ? (
+        <div className="surface-card px-5 py-8 text-center">
+          <p className="text-sm font-medium">No recent activity</p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Your completed AI activities will appear here.
+          </p>
+        </div>
+      ) : (
+        <ul className="surface-card divide-y divide-border">
+          {recent.map((a) => (
+            <li key={a.id} className="flex flex-wrap items-center gap-2 px-5 py-4">
+              <span className="rounded-full bg-muted px-2.5 py-1 text-xs font-medium">
+                {a.type}
+              </span>
+              <span className="flex-1 text-sm">{a.title}</span>
+              <span className="text-xs text-muted-foreground">{formatWhen(a.createdAt)}</span>
+            </li>
+          ))}
+        </ul>
+      )}
     </AppLayout>
   );
 }
+

@@ -15,6 +15,7 @@ import {
 import { useAi } from "@/lib/useAi";
 import { buildInsightsPrompt } from "@/lib/prompts";
 import { toast } from "sonner";
+import { addActivity } from "@/lib/activity";
 
 export const Route = createFileRoute("/insights")({
   head: () => ({
@@ -54,14 +55,24 @@ function Insights() {
       toast.error("Tell Rooted Insights what to research first.");
       return;
     }
-    void ai.generate([
-      {
-        role: "system",
-        content:
-          "You are a careful business research assistant. You never present unverified medical or scientific claims as fact.",
-      },
-      { role: "user", content: buildInsightsPrompt(topic, focus) },
-    ]);
+    void ai
+      .generate([
+        {
+          role: "system",
+          content:
+            "You are a careful business research assistant. You never present unverified medical or scientific claims as fact.",
+        },
+        { role: "user", content: buildInsightsPrompt(topic, focus) },
+      ])
+      .then((text) => {
+        if (!text) return;
+        addActivity({
+          type: "Rooted Insights",
+          title: `${focus} — ${topic.trim().slice(0, 60)}${topic.trim().length > 60 ? "…" : ""}`,
+          input: `Focus: ${focus}\n\n${topic}`,
+          output: text,
+        });
+      });
   };
 
   return (

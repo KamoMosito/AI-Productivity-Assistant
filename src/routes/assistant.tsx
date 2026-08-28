@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { runAi } from "@/lib/ai.functions";
 import { ASSISTANT_SYSTEM } from "@/lib/prompts";
+import { addActivity } from "@/lib/activity";
 
 export const Route = createFileRoute("/assistant")({
   head: () => ({
@@ -60,6 +61,12 @@ function Assistant() {
         },
       });
       setMessages([...next, { role: "assistant", content: res.text }]);
+      addActivity({
+        type: "AI Assistant",
+        title: content.slice(0, 70) + (content.length > 70 ? "…" : ""),
+        input: content,
+        output: res.text,
+      });
     } catch (e) {
       setError(e instanceof Error ? e.message : "Unexpected error. Please retry.");
     } finally {
