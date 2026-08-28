@@ -16,6 +16,7 @@ import {
 import { useAi } from "@/lib/useAi";
 import { buildEmailPrompt } from "@/lib/prompts";
 import { toast } from "sonner";
+import { addActivity } from "@/lib/activity";
 
 export const Route = createFileRoute("/smart-email")({
   head: () => ({
@@ -53,10 +54,20 @@ function SmartEmail() {
       toast.error("Please add a purpose and at least one key point.");
       return;
     }
-    void ai.generate([
-      { role: "system", content: "You write business emails and follow instructions exactly." },
-      { role: "user", content: buildEmailPrompt({ audience, purpose, keyPoints, tone, length }) },
-    ]);
+    void ai
+      .generate([
+        { role: "system", content: "You write business emails and follow instructions exactly." },
+        { role: "user", content: buildEmailPrompt({ audience, purpose, keyPoints, tone, length }) },
+      ])
+      .then((text) => {
+        if (!text) return;
+        addActivity({
+          type: "Smart Email",
+          title: purpose.trim(),
+          input: `Audience: ${audience}\nTone: ${tone}\nLength: ${length}\nPurpose: ${purpose}\n\nKey points:\n${keyPoints}`,
+          output: text,
+        });
+      });
   };
 
   const clearAll = () => {
