@@ -1,7 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Mail, NotebookPen, CalendarCheck, Search, Bot, TrendingUp } from "lucide-react";
+import { Mail, NotebookPen, CalendarCheck, Search, Bot } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
+import { countByType, formatWhen, useActivities } from "@/lib/activity";
+
 
 export const Route = createFileRoute("/")({
   head: () => ({
